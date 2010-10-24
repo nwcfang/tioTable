@@ -1,4 +1,6 @@
-sdgasdgdsg agsdgasdgotock o0rk ofksdpro kfodepgvkrto
-asdfasdfa asdgasg
-sdfgsdf sdfgdsf dgsfg 
-sdfg sdfg sfg 
+OSRELEASE=2.6.31-14-generic PAGESIZE=4096 SYMBOL(mem_map)=c08925a0
+SYMBOL(pkmap_count)=c088c580
+SYMBOL(pkmap_count_next)=c088d580
+SYMBOL(init_uts_ns)=c074a3c0
+SYMBOL(_stext)=c01010e8
+
