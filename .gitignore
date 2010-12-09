@@ -1,2 +1,6 @@
 a.out
 in.txt
+bin/*
+lib/*
+obj/*
+
