@@ -5,18 +5,18 @@ all: myapp
 CC=gcc
 INCLUDE=./
 
-myapp: tioTableBegin.o tioTableEnd.o main.o
-	$(CC) -o $@ main.o tioTableBegin.o tioTableEnd.o
+myapp: tioTableBegin.o main.o
+	$(CC) -o $@ main.o tioTableBegin.o
 
 main.o: main.c
 	$(CC) -o $@ -c -I$(INCLUDE) main.c
 
 tioTableBegin.o: tioTableBegin.c tiotb.h
-	$(CC) -o $@ -c tioTableBegin.c
+	$(CC) -o $@ -c -I$(INCLUDE) tioTableBegin.c
 
-tioTableEnd.o: tioTableEnd.c tiotb.h
-	$(CC) -o $@ -c tioTableEnd.c
+#tioTableEnd.o: tioTableEnd.c tiotb.h
+#	$(CC) -o $@ -c tioTableEnd.c
 
 clean:
-	rm myapp main.o tioTableBegin.o tioTableEnd.o
+	rm myapp main.o tioTableBegin.o
 

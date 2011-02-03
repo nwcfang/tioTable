@@ -3,4 +3,6 @@ in.txt
 bin/*
 lib/*
 obj/*
+devel/*.o
+devel/myapp
 
