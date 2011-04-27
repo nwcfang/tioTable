@@ -1,0 +1,28 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+MAXFORDAT	tioTableBegin.c	8;"	d	file:
+MAXLENWORD	tioTableEnd.c	7;"	d	file:
+MSRTLEN	main.c	12;"	d	file:
+TIOCHAR	main.c	7;"	d	file:
+TIODOUBLE	main.c	8;"	d	file:
+TIOLONG	main.c	9;"	d	file:
+TIOSTRING	main.c	10;"	d	file:
+WIDTH	tioTableEnd.c	8;"	d	file:
+bufType	tiotb.h	/^    char *bufType;      \/*Буфер с типам данных для каждого столбца*\/$/;"	m	struct:inform
+cap	tiotb.h	/^    char **cap;         \/*Шапка*\/$/;"	m	struct:inform
+countColum	tiotb.h	/^    int countColum;     \/*Колличество столбцов*\/$/;"	m	struct:inform
+countLetter	tiotb.h	/^    int countLetter;    \/*Колличество символов в строке*\/$/;"	m	struct:inform
+data	tiotb.h	/^    void **data;        \/*Данные*\/$/;"	m	struct:inform
+inform	tiotb.h	/^struct inform$/;"	s
+main	main.c	/^int main( )$/;"	f
+main	test.c	/^int main ( )$/;"	f
+main	test2.c	/^int main( )$/;"	f
+main	test_itoa.c	/^int main()$/;"	f
+tioTableBegin	tioTableBegin.c	/^void* tioTableBegin( const char* format,  ... )$/;"	f
+tioTableBegin	tiotb.c	/^int tioTableBegin(char** cap, int* bufTupe, const char* format, ... )$/;"	f
+tioTableEnd	tioTableEnd.c	/^int tioTableEnd( void *td )$/;"	f
+tioTableRecord	tioTableRecord.c	/^void *tioTableRecord( void *td )$/;"	f
