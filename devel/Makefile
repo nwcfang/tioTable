@@ -1,22 +1,24 @@
 #Тестирование функций семейства tioTable
-#tiotb.c - tioTableBegin
 all: myapp
 
 CC=gcc
 INCLUDE=./
+CFLAGS=-g
 
-myapp: tioTableBegin.o main.o
-	$(CC) -o $@ main.o tioTableBegin.o
+myapp: tioTableBegin.o tioTableRecord.o tioTableEnd.o main.o
+	$(CC) -o $@ $(CFLAGS) main.o tioTableBegin.o tioTableRecord.o tioTableEnd.o
 
 main.o: main.c
-	$(CC) -o $@ -c -I$(INCLUDE) main.c
+	$(CC) -o $@ $(CFLAGS) -c -I$(INCLUDE) main.c
 
 tioTableBegin.o: tioTableBegin.c tiotb.h
-	$(CC) -o $@ -c -I$(INCLUDE) tioTableBegin.c
+	$(CC) -o $@ $(CFLAGS) -c -I$(INCLUDE) tioTableBegin.c
 
-#tioTableEnd.o: tioTableEnd.c tiotb.h
-#	$(CC) -o $@ -c tioTableEnd.c
+tioTableRecord.o: tioTableRecord.c tiotb.h
+	$(CC) -o $@ $(CFLAGS) -c -I$(INCLUDE) tioTableRecord.c
 
+tioTableEnd.o: tioTableEnd.c tiotb.h
+	$(CC) -o $@ $(CFLAGS) -c -I$(INCLUDE) tioTableEnd.c
 clean:
-	rm myapp main.o tioTableBegin.o
+	rm myapp main.o tioTableBegin.o tioTableRecord.o tioTableEnd.o
 

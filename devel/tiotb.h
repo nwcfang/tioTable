@@ -1,13 +1,12 @@
 struct inform
 {
-    char** cap;         /*Шапка*/
+    char **cap;         /*Шапка*/
     int countLetter;    /*Колличество символов в строке*/
     int countColum;     /*Колличество столбцов*/
-    int* bufType;       /*Буфер с типам данных для каждого столбца*/
+    char *bufType;      /*Буфер с типам данных для каждого столбца*/
+    void ***data;        /*Данные*/
 };
 
-extern int tioTableBegin( struct inform *datTab, const char* format, ... );
-
-extern int tioTableEnd( char **cap, int *bufType );
-
-
+extern void* tioTableBegin( const char *format, ... );
+extern void* tioTableRecord( void *td );
+extern int tioTableEnd( void *td );
