@@ -23,7 +23,7 @@ int main( )
     double doub_test = 23.7; 
     long   long_test = 33;
     char *s_test = "aerl;gjie;rg";
-
+    char *s_test2 = "xxxxxxxxxxx";
 
     printf("\n\n");
     printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
@@ -42,7 +42,7 @@ int main( )
     }
 
     printf("Считываем строку содержащую названия колонок.\n");
-    /*(name&number&&class&state)*//*(name&number&&class&state)*/
+    /*(name&number&&class&state)*/
     fgets( string, MSRTLEN, in);
     printf( "%s\n", string );
     
@@ -53,7 +53,8 @@ int main( )
     /*Вызов функции заполнения таблицы*/
     printf("\nВызов функции \"tioTableRecord\".\n");
     td = tioTableRecord( td,num, c_test, doub_test, long_test, s_test );
-
+    c_test = 'g' ; doub_test = 43.9 ;long_test = 43 ;
+    td = tioTableRecord( td,num, c_test, doub_test, long_test, s_test2 );
     /*Вызов завершающей функции*/
     printf("\nВызов функции \"tioTableEnd\".\n");
     tioTableEnd( td );

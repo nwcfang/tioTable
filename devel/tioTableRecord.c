@@ -45,21 +45,29 @@ void *tioTableRecord( void *td, int num, ...  )
             strn = va_arg( ap, char *);
             datTab->ptr->s[i]=(char *)malloc(strlen(strn));  
             strcpy ((char *)datTab->ptr->s[i],strn);
-            printf("string %s добавлена",  (char *) datTab->ptr->s[i]);
+            printf("string %s добавлена\n",  (char *) datTab->ptr->s[i]);
             break;
         default:
             printf("Неправельный параметр функции tioTableRecord!\n");
             return NULL;
         }
     }
-        if( (datTab->ptr->n = (cl*) malloc(sizeof(cl))) == NULL )
-        {
-            printf("Error\n");
-            return NULL;
-        }
-        datTab->ptr = datTab->ptr->n;
-        datTab->ptr->n = NULL;
-        
+
+    /*Выделение памяти для указателя на голову списка*/
+    if( (datTab->ptr->n = (cl*) malloc(sizeof(cl))) == NULL )
+    {
+        printf("Error\n");
+        return NULL;
+    }
+    datTab->ptr = datTab->ptr->n;
+    datTab->ptr->n = NULL;
+
+    /*Выделяем память для указателя ptr->s*/
+    if( (datTab->ptr->s = (void **) calloc(datTab->countColum, sizeof(void *))) == NULL )
+    {
+        printf("\nError ptr->s\n");
+        return NULL;
+    }
 
    va_end(ap); 
 
