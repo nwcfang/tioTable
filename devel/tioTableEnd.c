@@ -6,77 +6,54 @@
 
 
 #define WIDTH 120           /*Общая ширина таблицы*/
-#define STRINGLEN 1000      /*Максимальная длина строки в одной ячейке таблицы*/ 
-#define MAXCOUNTSTR 200     /*Максимальное число строк в таблице*/
 
 /*Вывод таблицы*/
 int tioTableEnd( void *td )
 {
     struct inform *datTab;
-    char strInp[50];        /*Данные переведенные в строку*/
+    char strInp[50];        /*Данные переведptrенные в строку*/
     int i = 0;              /*Счетчик*/
     int j = 0;              /*Счетчик*/
-    int leftJ = 0, rightJ = 0, generalJ = 0, sch = 0, len = 0;
+    /*int leftJ = 0, rightJ = 0, generalJ = 0, sch = 0, len = 0;*/
     int lenColCon;          /*Размер колонки*/
     int lenColVar;          /*Количество символов (пока не используется)*/
-    int colSpace;
-
+    void *next;             /*Указать на следующую область памяти которую надо освободить*/ 
     datTab = (struct inform *) td;
 
-    /*Подсчет толщены столбца в зависимости от количества столбцов*/
-    lenColCon = (WIDTH - 1) / datTab->countColum;   /*- 1 для правельного отображения таблицы*/
-    printf("Размер колонки = %d\n", lenColCon + 1);   
-    for( i = 0; i < (WIDTH + 1); ++ i )             /*+ 1 для правельного отображения таблицы*/ 
-        printf("-");
-    printf( "\n|" );
-
-    /*Отображение шапки*/
-    for(i = 0; i < datTab->countColum; ++ i )
-    {
-        printf( "%s", datTab->cap[i] );
-        for( j = 0; j < (lenColCon - strlen(datTab->cap[i])); ++ j )
-            printf( " " );
-        printf( "|" );
-    }
-    printf( "\n" );
-    for( i = 0; i < (WIDTH + 1); ++ i )             /*+ 1 для правельного отображения таблицы*/ 
-        printf("-");
-    printf( "\n|" );
-
-    /*Отображение ячеек данных*/ 
-    for( i = 0; i < datTab->countColum; ++ i  )
-    {
-        
-        switch( datTab->bufType[i] )
-        {
-            case 1:
-                sprintf( strInp, "%c", *(char *)datTab->data[i][0] );
-                printf( "%c", *(char *)datTab->data[i][0] );
-                break;
-
-            case 2:
-                sprintf( strInp, "%.2f", *(double *)datTab->data[i][0] );
-                printf( "%s", strInp );
-                break;
-
-            case 4:
-                sprintf( strInp, "%d", *(int *)datTab->data[i][0] );
-                printf( "%s", strInp);
-                break;
-
-            default:
-                printf("Это что а тип?");
-                break;
-        }
-        for( j = 0; j < (lenColCon - strlen(strInp)); ++ j )
-            printf( " " );
-        printf( "|" );
-        
-    
-    }
-    printf("\n");
-    for( i = 0; i < (WIDTH + 1); ++ i )             /*+ 1 для правельного отображения таблицы*/ 
-        printf("-");
+/*    [>Подсчет толщены столбца в зависимости от количества столбцов<]
+ *    lenColCon = (WIDTH - 1) / datTab->countColum;   [>- 1 для правельного отображения таблицы<]
+ *    printf("Размер колонки = %d\n", lenColCon + 1);   
+ *    for( i = 0; i < (WIDTH + 1); ++ i )      ptr       [>+ 1 для правельного отображения таблицы<] 
+ *        printf("-");
+ *    printf( "\n|" );
+ *
+ *    [>Отображение шапки<]
+ *    for(i = 0; i < datTab->countColum; ++ i )
+ *    {
+ *        printf( "%s", datTab->cap[i] );
+ *        for( j = 0; j < (lenColCon - strlen(datTab->cap[i])); ++ j )
+ *            printf( " " );
+ *        printf( "|" );
+ *    }
+ *    printf( "\n" );
+ *    for( i = 0; i < (WIDTH + 1); ++ i )             [>+ 1 для правельного отображения таблицы<] 
+ *        printf("-");
+ *    printf( "\n|" );
+ *free(datTab->ptr->
+ *    [>Отображение ячеек данных<] 
+ *    for( i = 0; i < datTab->countColum; ++ i  )
+ *    {
+ *        
+ *        
+ *        for( j = 0; j < (lenColCon - strlen(strInp)); ++ j )
+ *            printf( " " );
+ *        printf( "|" );
+ *        
+ *    
+ *    }
+ *    printf("\n");
+ *    for( i = 0; i < (WIDTH + 1); ++ i )             [>+ 1 для правельного отображения таблицы<] 
+ *        printf("-");*/
     
     
     /*Вывод строки таблицы*/
@@ -130,18 +107,33 @@ int tioTableEnd( void *td )
 
         }*/
 
+
     printf("\n");
 
     /*Освобождаем память для шапки и data*/
     for( i = 0; i < datTab->countColum; ++ i )
         free(datTab->cap[i]);
     free( datTab->cap );
-    for( i = 0; i < datTab->countColum; ++ i )
-        free(datTab->data[i][0]);
-    free( datTab->data );
 
     /*Освобождаем память для буффера с типами данных*/
     free(datTab->bufType);
+
+
+    /*Освобождаем память списока, ptr->s, также, в
+     *случае если есть тип строка, освобождаем строку*/  /*Не уверен что работает*/ 
+    datTab->ptr = datTab->head;
+    do 
+    {     
+        next = (void *) datTab->ptr->n;
+        for( i = 0; i < datTab->countColum; ++ i )
+        {
+            if((datTab->bufType[i] == 4) && (datTab->ptr->n != NULL))
+                free(datTab->ptr->s[i]);
+        }
+        free(datTab->ptr->s);
+        free(datTab->ptr);
+        datTab->ptr = (cl *) next;
+    } while (datTab->ptr != NULL);
 
     /*Освобождаем память для структуры*/
     free(datTab);

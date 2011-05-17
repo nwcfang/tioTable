@@ -1,1 +1,1 @@
-name&number&&class&state
+name&doub&&le&long&string

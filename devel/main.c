@@ -18,7 +18,11 @@ int main( )
     FILE *in;
     void *td;
     char *string = NULL;
-    int i;
+    int i, num = 1;
+    char c_test = 'f' ; 
+    double doub_test = 23.7; 
+    long   long_test = 33;
+    char *s_test = "aerl;gjie;rg";
 
 
     printf("\n\n");
@@ -38,16 +42,17 @@ int main( )
     }
 
     printf("Считываем строку содержащую названия колонок.\n");
-    /*(name&number&&class&state)*/
+    /*(name&number&&class&state)*//*(name&number&&class&state)*/
     fgets( string, MSRTLEN, in);
     printf( "%s\n", string );
-
+    
+    fclose(in);
     printf("Вызов функции \"tioTableBegin\".\n");
-    td = tioTableBegin( string, TIOCHAR, TIODOUBLE, TIOSTRING );
+    td = tioTableBegin( string, TIOCHAR, TIODOUBLE, TIOLONG, TIOSTRING);
 
     /*Вызов функции заполнения таблицы*/
-    printf("\nВзов функции \"tioTableRecord\".\n");
-    td = tioTableRecord( td );
+    printf("\nВызов функции \"tioTableRecord\".\n");
+    td = tioTableRecord( td,num, c_test, doub_test, long_test, s_test );
 
     /*Вызов завершающей функции*/
     printf("\nВызов функции \"tioTableEnd\".\n");

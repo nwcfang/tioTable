@@ -1,39 +1,67 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #include <tiotb.h>
 
-void *tioTableRecord( void *td )
+void *tioTableRecord( void *td, int num, ...  )
 {
+    va_list ap;
     struct inform *datTab;
     int i;
     int* in;
-    char* ch;
+    char ch;
+    double dbd;
+    long ln;
     double* db;
+    char* strn;
     void *extPointer;
+
+    va_start( ap, num );
     
     datTab = (struct inform *) td;
-
-    (in = (int*) calloc( 1, sizeof(int))) == NULL;
-    (ch = (char*) calloc( 1, sizeof(char))) == NULL;
-    (db = (double*) calloc( 1, sizeof(double))) == NULL; 
-    
-    if( (in == NULL) && (ch == NULL) && (db == NULL) )
+    for( i = 0; i < datTab->countColum; ++ i )
     {
-        fprintf( stderr, "Error calloc 'in' or 'ch' or 'db'\n" );
-        return NULL;
+        
+        switch( datTab->bufType[i] )
+        {
+        case 1:
+            ch = (char) va_arg( ap, int);
+            datTab->ptr->s[i] = (void *) &ch ;
+            printf("char %c добавлен\n", *(char *)datTab->ptr->s[i]);
+            break;
+        case 2:
+            dbd =  va_arg( ap, double);
+            datTab->ptr->s[i] = (void *) &dbd;
+            printf("double %f добавлен\n", *(double *)datTab->ptr->s[i]);
+            break;
+        case 3:
+            ln =  va_arg( ap, long);
+            datTab->ptr->s[i] = (void *) &ln;
+            printf("long %ld добавлен\n", *(long *)datTab->ptr->s[i]);
+            break;
+        case 4:
+            strn = va_arg( ap, char *);
+            datTab->ptr->s[i]=(char *)malloc(strlen(strn));  
+            strcpy ((char *)datTab->ptr->s[i],strn);
+            printf("string %s добавлена",  (char *) datTab->ptr->s[i]);
+            break;
+        default:
+            printf("Неправельный параметр функции tioTableRecord!\n");
+            return NULL;
+        }
     }
+        if( (datTab->ptr->n = (cl*) malloc(sizeof(cl))) == NULL )
+        {
+            printf("Error\n");
+            return NULL;
+        }
+        datTab->ptr = datTab->ptr->n;
+        datTab->ptr->n = NULL;
+        
 
-    /*Тестовый способ присвоения данных*/
-    in[0] = 5;
-    ch[0] = 'c';
-    db[0] = 1.42;
-    datTab->data[0][0] = (void *) ch;
-    datTab->data[1][0] = (void *) db;
-    datTab->data[2][0] = (void *) in;
-
-    printf( "В data хронится: %c, %.2f, %d\n", *(char *)datTab->data[0][0], *(double *)datTab->data[1][0], *(int *)datTab->data[2][0] );
+   va_end(ap); 
 
     extPointer = (void *) datTab;
     return extPointer;

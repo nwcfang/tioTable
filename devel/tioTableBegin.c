@@ -16,12 +16,16 @@ void* tioTableBegin( const char* format,  ... )
     void *extPointer;
     va_start( ap, format );
 
+     
+
     /*Выделение памяти для указателя на структуру*/
     if( (datTab = (struct inform*) calloc( 1, sizeof(struct inform)) ) == NULL )
     {
         fprintf( stderr, "\nError \n" );
         return NULL;
     }
+
+    
 
     /*Подсчет колличества колонок в таблице, максимальной длины колонки.*/
     for( i = 0; format[i] != '\n'; ++i )
@@ -56,7 +60,7 @@ void* tioTableBegin( const char* format,  ... )
 
 
     /*Выделение памяти для типов данных. */
-    if( (datTab->bufType = (char*) calloc(datTab->countColum, sizeof(char))) != NULL )
+    if( (datTab->bufType = (int*) calloc(datTab->countColum, sizeof(int))) != NULL )
         ;
     else
     {
@@ -66,33 +70,29 @@ void* tioTableBegin( const char* format,  ... )
 
     printf("\n");
 
+    /*Выделение памяти для указателя на голову списка*/ 
+    if( (datTab->head = (cl *) malloc( sizeof(cl))) == NULL )
+    {
+        printf("\nError ptr\n");
+        return NULL;
+    }
+
+    datTab->ptr = datTab->head;
+    datTab->ptr->n = NULL;
+
+    /*Выделяем память для указателя ptr->s*/    
+    if( (datTab->ptr->s = (void **) calloc(datTab->countColum, sizeof(void *))) == NULL )
+    {
+        printf("\nError ptr->s\n");
+        return NULL;
+    } 
+
     /*Запись в буфер типов данных*/
     printf ("Типы данных: ");
     for ( i = 0; i < datTab->countColum; ++ i )
     {
         datTab->bufType[i] = va_arg(ap, int);
         printf("%i", datTab->bufType[i]);
-    }
-
-    printf("\n");
-
-    /*Выделение памяти для данных*/
-    if( (datTab->data = (void ***) calloc(datTab->countColum, sizeof(void *))) != NULL )
-    {
-        printf( "Выделено %d ячеек памяти для data.\n", datTab->countColum );
-        for( i = 0; i < datTab->countColum; ++ i )
-        {
-            if((datTab->data[i] = (void **) calloc(MAXCOUNTSTR, sizeof(void *))) == NULL )
-            {
-                printf("Error\n");
-                return 1;
-            }
-        }
-    }
-    else
-    {
-        printf("error");
-        return NULL;
     }
 
     printf("\n");
@@ -116,7 +116,6 @@ void* tioTableBegin( const char* format,  ... )
         }
         ++jj;
     }
-
     /* Вывод на экран содержимое datTab.cap[i][j], в котором содержатся названия колонок */
     for( i = 0; i < datTab->countColum; ++i )
     {
