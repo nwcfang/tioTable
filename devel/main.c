@@ -22,10 +22,10 @@ int main( )
     char c_test = 'f' ; 
     double doub_test = 23.7; 
     long   long_test = 33;
-    char *s_test = "aerl;gjie;rg";
-    char *s_test2 = "xxxxxxxxxxx";
+    /*char *s_test = "Персональные данные о работниках ОАО РТИ";*/
+    char *s_test = "qwertyuiop[]asdfghjkl;'zxcvbnm,./";
+    char *s_test2 = "ddddddddddd";
 
-    printf("\n\n");
     printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
     /*Выделение памяти для строки с названием колонок*/
     if( (string = (char*) calloc( MSRTLEN, sizeof(char)) ) == NULL )

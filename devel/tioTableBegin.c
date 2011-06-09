@@ -60,9 +60,7 @@ void* tioTableBegin( const char* format,  ... )
 
 
     /*Выделение памяти для типов данных. */
-    if( (datTab->bufType = (int*) calloc(datTab->countColum, sizeof(int))) != NULL )
-        ;
-    else
+    if( (datTab->bufType = (int*) calloc(datTab->countColum, sizeof(int))) == NULL )
     {
         printf("\nerror *datTab->bufType\n");
         return NULL;
