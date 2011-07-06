@@ -23,9 +23,10 @@ int main( )
     double doub_test = 23.7; 
     long   long_test = 33;
     /*char *s_test = "Персональные данные о работниках ОАО РТИ";*/
-    char *s_test = "qwertyuiop[]asdfghjkl;'zxcvbnm,./";
-    char *s_test2 = "ddddddddddd";
-
+    char *s_test = "Animated by Ryan Woodward, choreographed by Janet Eilber, and danced by Blakeley White-McGuire.";
+    char *s_test2 = "The essence of COM is a language-neutral way of implementing objects that can be used in environments";
+    char *s_test3 = "ooooooooooo";
+    char *s_test4 = "An advantage of COM+ was that it could be run in.";
     printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
     /*Выделение памяти для строки с названием колонок*/
     if( (string = (char*) calloc( MSRTLEN, sizeof(char)) ) == NULL )
@@ -48,13 +49,13 @@ int main( )
     
     fclose(in);
     printf("Вызов функции \"tioTableBegin\".\n");
-    td = tioTableBegin( string, TIOCHAR, TIODOUBLE, TIOLONG, TIOSTRING);
+    td = tioTableBegin( string, TIOSTRING, TIOSTRING, TIODOUBLE, TIOSTRING);
 
     /*Вызов функции заполнения таблицы*/
     printf("\nВызов функции \"tioTableRecord\".\n");
-    td = tioTableRecord( td,num, c_test, doub_test, long_test, s_test );
+    td = tioTableRecord( td,num, s_test4, s_test4, doub_test, s_test );
     c_test = 'g' ; doub_test = 43.9 ;long_test = 43 ;
-    td = tioTableRecord( td,num, c_test, doub_test, long_test, s_test2 );
+    td = tioTableRecord( td,num, s_test4, s_test4, doub_test, s_test2 );
     /*Вызов завершающей функции*/
     printf("\nВызов функции \"tioTableEnd\".\n");
     tioTableEnd( td );

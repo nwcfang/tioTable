@@ -7,32 +7,42 @@
 #define MAX_MYSTRING 100
 #define WIDTH 120           /*Общая ширина таблицы*/
 
+
+
+
 /*Вывод таблицы*/
 int tioTableEnd( void *td )
 {
+    /*====================================================================================*/ 
     struct inform *datTab;
     char *myString;            /*Строка*/ 
     int tmp;
     int strI;
-    char strInp[50];        /*Данные переведенные в строку*/
+    int strIend;            /*До этого числа будет выводится строка,
+                            потом будет переходить на новую строчку*/ 
     int i = 0, ii = 0;      /*Счетчик*/
+
     int cStr, cMax;         /*Счетчит строк выведеных, счетчик строк надо вывести*/ 
+    
     int j = 0;              /*Счетчик*/
     int lenColCon;          /*Размер колонки*/
-    int lenColVar;          /*Количество символов (пока не используется)*/
     void *next;             /*Указать на следующую область памяти которую надо освободить*/ 
     char *str;
-    int *masStr;              /*Массив количества требуемых строк для 
-                               вывода каждой ячейки строки */ 
-    datTab = (struct inform *) td;
-    
-    /*Выделение памяти для массива символов, которые не поместились*/ 
-    if( (masStr = (int *) malloc ( sizeof(int) * datTab->countColum)) == NULL )
+    int fMax;
+    int *masCountCells;      /*Массив содержащий количество дополнительных ячеек,
+                                которые могут потребоваться в случае, если строка
+                                не помещается в одну ячейку*/ 
+    /*====================================================================================*/ 
+
+    /*Выделение памяти для *masCountCells*/ 
+    if( (masCountCells = (int *) calloc (datTab->countColum, sizeof(int))) == NULL )
     {
-        printf("error in malloc!");
+        printf("error");
         return 1;
     }
 
+    datTab = (struct inform *) td;
+    
     /*Подсчет толщены столбца в зависимости от количества столбцов*/
     lenColCon = WIDTH / datTab->countColum;   
     printf("Размер колонки = %d\n", lenColCon);  
@@ -70,7 +80,7 @@ int tioTableEnd( void *td )
 
     datTab->ptr = datTab->head;
 
-    if( (myString = calloc(MAX_MYSTRING, sizeof(char))) == NULL )
+    if( (myString = (char *) calloc(MAX_MYSTRING, sizeof(char))) == NULL )
     {
         printf("error in calloc");
     }
@@ -82,75 +92,84 @@ int tioTableEnd( void *td )
         if( datTab->ptr->n == NULL )         
             break;
 
+        cStr = 0;
+        cMax = 0;
 
-         /*Нужно 1) создать бесконечный цикл пока не выведет все строчки потом уже переходить на следующий узел
-          * 2) подсчет максимального вывода строк
-          * 3) заполнять массив |2|3|4|3|
-          * 4) счетчик для уже выведеных строчек
-          */ 
-        
+         /* Нужно   1) создать бесконечный цикл пока не выведет все строчки потом уже переходить на следующий узел
+          *         2) подсчет максимального вывода строк
+          *         3) заполнять массив |2|3|4|3|
+          *         4) счетчик для уже выведеных строчек
+          */
 
-
-        
-        for( i = 0; i < datTab->countColum; ++ i  )
+        /*Пока все строки полностью не выведутся*/ 
+        do
         {
             strI = 0;
-            switch( datTab->bufType[i])
+            /*Цикл выводит одну ячейку таблицы*/ 
+            for( i = 0; i < datTab->countColum; ++ i  )
             {
-            case 1:
-                if(cStr = 1 )
+                switch( datTab->bufType[i])
                 {
-                    printf( "|%c", *(char *)datTab->ptr->s[i]);
-                    sprintf( myString, "%c", *(char *)datTab->ptr->s[i] );
+                case 1:
+                    if(cStr == 0 )
+                    {
+                        printf( "|%c", *(char *)datTab->ptr->s[i]);
+                        sprintf( myString, "%c", *(char *)datTab->ptr->s[i] );
+                    }
+                    else
+                        printf("|");
+                    break;
+                case 2:
+                    if(cStr == 0)
+                    {
+                        printf("|%.2f", *(double *)datTab->ptr->s[i]);
+                        sprintf( myString, "%.2f", *(double *)datTab->ptr->s[i] );
+                    }
+                    else
+                        printf("|");
+                    break;
+                case 3:
+                    if(cStr == 0)
+                    {
+                        printf("|%ld", *(long *)datTab->ptr->s[i]);
+                        sprintf( myString, "%ld", *(long *)datTab->ptr->s[i] );
+                    }
+                    else
+                        printf("|");
+                    break;
+                case 4:
+                    if(cStr == 0)
+                    {
+                        masCountCells[i] = strlen((char *)datTab->ptr->s[i])/lenColCon;
+                        /* Для вычисления сколько всего понадобится строк чтобы 
+                         * правельно отобразить данную строку таблицы (cMax)*/ 
+                        if( masCountCells[i] > cMax )
+                            cMax = masCountCells[i];
+                    }
+                    printf("|");
+                    if(cStr <= masCountCells[i])
+                    {
+                        strI = (lenColCon - 1) * cStr;
+                        strIend = lenColCon  * (cStr + 1) -1;
+                        strncpy( myString, (char *)datTab->ptr->s[i] + strI, strIend );
+                        printf("%s", myString);
+                    }
+                    break;
+                default:
+                    printf( "Ошибка!" );
+                    return 1;
                 }
-                break;
-            case 2:
-                printf("|%.2f", *(double *)datTab->ptr->s[i]);
-                sprintf( myString, "%.2f", *(double *)datTab->ptr->s[i] );
-                break;
-            case 3:
-                printf("|%ld", *(long *)datTab->ptr->s[i]);
-                sprintf( myString, "%ld", *(long *)datTab->ptr->s[i] );
-                break;
-            case 4:
-                printf("|");
-                while( ((char *)datTab->ptr->s[i])[strI] != '\0' )
-                {
-                   printf("%c", ((char *)datTab->ptr->s[i])[strI] );
-                   ++ strI;
-                }
-                sprintf(myString, "%s", (char *)datTab->ptr->s[i] );
-                break;
-            default:
-                printf( "Ошибка!" );
-                return 1;
+                
+                tmp = lenColCon - strlen(myString) - 1;
+                for( j = 0; j < tmp; ++ j )
+                    printf( " " );
+                for( j = 0; j < lenColCon; ++ j )
+                    myString[j] = '\0';
             }
-            tmp = lenColCon - strlen(myString) - 1;
-            for( j = 0; j < tmp; ++ j )
-                printf( " " );
-        } 
-        printf("|");
-        printf("\n");
-
-        /*for(j = 0; j < 2; ++ j)*/
-        /*{*/
-            /*j = 2;*/
-            /*for(ii = 0; ii < datTab->countColum; ++ ii)*/
-            /*{*/
-                /*if(masStr[ii] != 0)*/
-                /*{*/
-                    /*while((strI < (((lenColCon -1) * j))) && ( ((char *)datTab->ptr->s[ii])[strI] != '\0' ))*/
-                    /*{*/
-                        /*[>printf("#%d#",strI);<]*/
-                        /*printf("%c", ((char *)datTab->ptr->s[ii])[strI] );*/
-                        /*++ strI;*/
-                        /*-- masStr[ii];*/
-                    /*}*/
-                    /*printf("\n");*/
-
-                /*}*/
-            /*}*/
-        /*}*/
+            ++ cStr;
+            printf("|\n");
+        } while(cStr < cMax);
+        
 
         /*Линия*/ 
         for( i = 0; i < WIDTH; ++ i )             
@@ -164,14 +183,18 @@ int tioTableEnd( void *td )
  
         datTab->ptr = datTab->ptr->n;
     }
+
+    /*Тест*/ 
+    for(i = 0; i < datTab->countColum; ++ i)
+        printf("%d", masCountCells[i]);
+    printf("\n%d", cMax);
+    //======================================
     free(myString);
-    /*Вывод строки таблицы*/
 
     printf("\n");
 
-    /*Освобождаем память для masStr*/ 
-    free(masStr);
-
+    /*Освобождаем память masCountCells*/ 
+    free(masCountCells);
     /*Освобождаем память для шапки и data*/
     for( i = 0; i < datTab->countColum; ++ i )
         free(datTab->cap[i]);
