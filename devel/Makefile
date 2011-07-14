@@ -3,7 +3,7 @@ all: myapp
 
 CC=gcc
 INCLUDE=./
-CFLAGS=-g
+CFLAGS=-g -Wall
 
 myapp: tioTableBegin.o tioTableRecord.o tioTableEnd.o main.o
 	$(CC) -o $@ $(CFLAGS) main.o tioTableBegin.o tioTableRecord.o tioTableEnd.o

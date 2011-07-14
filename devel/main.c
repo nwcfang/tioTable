@@ -18,14 +18,13 @@ int main( )
     FILE *in;
     void *td;
     char *string = NULL;
-    int i, num = 1;
+    int num = 1;
     char c_test = 'f' ; 
     double doub_test = 23.7; 
     long   long_test = 33;
     /*char *s_test = "Персональные данные о работниках ОАО РТИ";*/
     char *s_test = "Animated by Ryan Woodward, choreographed by Janet Eilber, and danced by Blakeley White-McGuire.";
     char *s_test2 = "The essence of COM is a language-neutral way of implementing objects that can be used in environments";
-    char *s_test3 = "ooooooooooo";
     char *s_test4 = "An advantage of COM+ was that it could be run in.";
     printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
     /*Выделение памяти для строки с названием колонок*/
