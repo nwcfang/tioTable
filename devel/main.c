@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <tiotb.h> /*Мой хедер*/
+#include <tiotb.h> /*My header*/
 
 #define TIOCHAR     1 
 #define TIODOUBLE   2
@@ -17,12 +17,11 @@ int main( )
 {
     FILE *in;
     void *td;
-    char *string = NULL;
     int num = 1;
-    char c_test = 'f' ; 
     double doub_test = 23.7; 
     long   long_test = 33;
-    /*char *s_test = "Персональные данные о работниках ОАО РТИ";*/
+    char *string = NULL;
+    char c_test = 'f' ; 
     char *s_test = "Animated by Ryan Woodward, choreographed by Janet Eilber, and danced by Blakeley White-McGuire.";
     char *s_test2 = "The essence of COM is a language-neutral way of implementing objects that can be used in environments";
     char *s_test4 = "An advantage of COM+ was that it could be run in.";
@@ -40,6 +39,8 @@ int main( )
         fprintf( stderr, "Cannot open input file.\n" );
         return 1;
     }
+    
+    
 
     printf("Считываем строку содержащую названия колонок.\n");
     /*(name&number&&class&state)*/
@@ -48,13 +49,13 @@ int main( )
     
     fclose(in);
     printf("Вызов функции \"tioTableBegin\".\n");
-    td = tioTableBegin( string, TIOSTRING, TIOSTRING, TIODOUBLE, TIOSTRING);
+    td = tioTableBegin( string, TIOCHAR, TIOSTRING, TIODOUBLE, TIOSTRING);
 
     /*Вызов функции заполнения таблицы*/
     printf("\nВызов функции \"tioTableRecord\".\n");
-    td = tioTableRecord( td,num, s_test4, s_test4, doub_test, s_test );
+    td = tioTableRecord( td,num, 'r', s_test4, doub_test, s_test );
     c_test = 'g' ; doub_test = 43.9 ;long_test = 43 ;
-    td = tioTableRecord( td,num, s_test4, s_test4, doub_test, s_test2 );
+    td = tioTableRecord( td,num, 'e', s_test4, doub_test, s_test2 );
     /*Вызов завершающей функции*/
     printf("\nВызов функции \"tioTableEnd\".\n");
     tioTableEnd( td );

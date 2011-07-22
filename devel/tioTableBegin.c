@@ -3,44 +3,39 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-#include <tiotb.h>
+#include <tiotb.h>          /*My header*/ 
 
-#define MAXCOUNTSTR 200     /*Максимальное число строк в таблице*/
-
-/*Функция инициализирует таблицу(задаётся шапка, и типы данных для каждого столбца)*/
+/*Table initialization*/
 void* tioTableBegin( const char* format,  ... )
 {
     va_list ap;
-    int i, jj, j;
+    int i;
+    int jj; 
+    int j;
     struct inform *datTab;
     void *extPointer;
+
     va_start( ap, format );
 
-     
-
-    /*Выделение памяти для указателя на структуру*/
+    /*Allocating memory for datTab structure*/
     if( (datTab = (struct inform*) calloc( 1, sizeof(struct inform)) ) == NULL )
     {
         fprintf( stderr, "\nError \n" );
         return NULL;
     }
 
-    
-
-    /*Подсчет колличества колонок в таблице, максимальной длины колонки.*/
+    /*Count the number of columns in a table and calculate the maximum length of the column.*/
     for( i = 0; format[i] != '\n'; ++i )
     {
        ++ datTab->countLetter;
         if( (format[i] == '&') && (format[i+1]) != '&')
-        {
             ++ datTab->countColum;
-        }
     }
 
     printf("Колличество символов %d.\nКолличество столбцов %d.\n", datTab->countLetter,
             datTab->countColum );
 
-    /*Выделение памяти под шапку.*/
+    /*Allocating memory for cap*/
     if( (datTab->cap = (char**) calloc(datTab->countColum , sizeof(char*))) != NULL )
     {
         for( i = 0; i < datTab->countColum ; ++ i)
@@ -59,7 +54,7 @@ void* tioTableBegin( const char* format,  ... )
     }
 
 
-    /*Выделение памяти для типов данных. */
+    /*Allocating memory for datTab->bufType*/
     if( (datTab->bufType = (int*) calloc(datTab->countColum, sizeof(int))) == NULL )
     {
         printf("\nerror *datTab->bufType\n");
@@ -68,7 +63,7 @@ void* tioTableBegin( const char* format,  ... )
 
     printf("\n");
 
-    /*Выделение памяти для указателя на голову списка*/ 
+    /*Allocating memory for pointer to the head of list*/ 
     if( (datTab->head = (cl *) malloc( sizeof(cl))) == NULL )
     {
         printf("\nError ptr\n");
@@ -78,14 +73,14 @@ void* tioTableBegin( const char* format,  ... )
     datTab->ptr = datTab->head;
     datTab->ptr->n = NULL;
 
-    /*Выделяем память для указателя ptr->s*/    
+    /*Allocating memory for ptr->s*/    
     if( (datTab->ptr->s = (void **) calloc(datTab->countColum, sizeof(void *))) == NULL )
     {
         printf("\nError ptr->s\n");
         return NULL;
     } 
 
-    /*Запись в буфер типов данных*/
+    /*Writing data types to the buffer*/
     printf ("Типы данных: ");
     for ( i = 0; i < datTab->countColum; ++ i )
     {
