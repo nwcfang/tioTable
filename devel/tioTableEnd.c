@@ -14,7 +14,6 @@ int tabRow( void **strings, int *bufType, int countColum, int lenColCon )
     int *colStr;                    /*Array of extra lines*/ 
     int i;
     int j;
-    int k;
     int max = 0;
     int extraCounter;               /*Extra lines counter*/ 
     int offset;                     /*Offset counter*/ 
@@ -60,18 +59,6 @@ int tabRow( void **strings, int *bufType, int countColum, int lenColCon )
             }
         }
     }
-    
-    /*Inserted '\0'*/
-    for( i = 0; i < countColum; ++ i )
-    {
-        for( j = 0; j < max; ++ j)
-        {
-            for( k = 0; k < lenColCon; ++ k )
-            {
-               data[i][j][k] = '\0';
-            }
-        }
-    }
 
     /*Partition line*/ 
     for(i = 0; i < countColum; ++ i)
@@ -99,6 +86,7 @@ int tabRow( void **strings, int *bufType, int countColum, int lenColCon )
             for(extraCounter = 1; extraCounter < (max + 1); ++ extraCounter)
                 for( offset = 0; offset < (lenColCon - 1); ++ offset )
                     data[i][extraCounter][offset] = ' '; 
+            /*printf("90 string in End = %s\n", (char*)strings[3]);*/
             break;
         case 3:
             sprintf( data[i][0], "%ld",*(long *) strings[i]);
@@ -115,9 +103,11 @@ int tabRow( void **strings, int *bufType, int countColum, int lenColCon )
             for( extraCounter = 0; extraCounter <= colStr[i]; ++ extraCounter )
             {
                 j = extraCounter * (lenColCon - 1);
-                for( offset = 0, j;
-                        (offset != (lenColCon - 1)) && (((char *)strings[i])[j] != '\0' ); ++ offset, ++ j)
+                for( offset = 0;
+                        ((offset != (lenColCon - 1)) && (((char *)strings[i])[j] != '\0' )); ++ offset, ++ j)
+                {
                     data[i][extraCounter][offset] = ((char *)strings[i])[j]; 
+                }
                 /*Insert spaces*/
                 for( offset; offset < (lenColCon - 1); ++ offset)
                     data[i][extraCounter][offset] = ' ';
@@ -136,12 +126,12 @@ int tabRow( void **strings, int *bufType, int countColum, int lenColCon )
     }
 
     /*Print row*/
-    for( i = 0; i < countColum; ++ i )
-    {
         for( strCounter = 0; strCounter < (max + 1); ++ strCounter  )
-            printf("|%s", data[strCounter][i]);    
-        printf("|\n");
-    } 
+        {
+            for( i = 0; i < countColum; ++ i )
+                printf("|%s", data[i][strCounter]);    
+            printf("|\n");
+        } 
 
     /*FREE */
     for( i = 0; i < countColum; ++ i )
@@ -173,13 +163,13 @@ int capMap( int countColum, char **cap, int lenColCon )
         for( j = 0; j < tmp - 1; ++ j )
             printf( " " );
     }
-    printf( "|\n");initialization table
+    printf( "|\n");
     
     return 0;
 }
 
 /*Draw line function*/
-int drawLine( int lenColCon )initialization table
+int drawLine( int lenColCon )
 {
     int i;
     for( i = 0; i < WIDTH; ++ i )   /*Need correct WIDTH*/ 
@@ -202,33 +192,49 @@ int tioTableEnd( void *td )
     int i;                          /*Counter*/ 
     int lenColCon;                  /*Cell width*/ 
     void *next;     
-    
+    int *masType;                   /*For type of cap*/ 
     datTab = (struct inform *) td;
     
     datTab->ptr = datTab->head;
+    /*printf("string in End = %s\n", (char*)datTab->ptr->s[3]);*/
 
     /*Calculate the column width depending on the number of*/  
     lenColCon = WIDTH / datTab->countColum;   
     printf("Размер колонки = %d\n", lenColCon);
+    
+    if( (masType = (int *) malloc(datTab->countColum * sizeof(int))) == NULL)
+    {
+        printf("ERROR!");
+        exit(EXIT_FAILURE);
+    }
 
     /*Draw line*/ 
     drawLine(lenColCon); 
-
+    
+    for( i = 0; i < datTab->countColum; ++ i )
+    {
+        masType[i] = 4;
+    }
     /*Display cap*/
-    capMap( datTab->countColum, datTab->cap, lenColCon );
+    tabRow( (void *)datTab->cap, masType, datTab->countColum, lenColCon); 
     
     /*Draw line*/
     drawLine(lenColCon);
     
     while( datTab->ptr->n != NULL )
     {
+
+        /*Print table row*/ 
         tabRow( datTab->ptr->s, datTab->bufType, datTab->countColum, lenColCon );
+
         /*Jump to the new cell*/ 
         datTab->ptr = datTab->ptr->n;
         /*Draw line*/
         drawLine(lenColCon);
     }
-
+    
+    /*Free masType*/
+    free(masType);
     /*Free data*/
     for( i = 0; i < datTab->countColum; ++ i )
         free(datTab->cap[i]);

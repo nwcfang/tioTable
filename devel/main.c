@@ -9,7 +9,7 @@
 #define TIOLONG     3
 #define TIOSTRING   4
 
-#define MSRTLEN 50/*Максимальная длина строки с названиями колонок*/
+#define MSRTLEN 500/*Максимальная длина строки с названиями колонок*/
 
 /*Тест функция */
 
@@ -22,13 +22,12 @@ int main( )
     long   long_test = 33;
     char *string = NULL;
     char c_test = 'f' ; 
-    char *s_test = "Animated by Ryan Woodward, choreographed by Janet Eilber, and danced by Blakeley White-McGuire.";
+    char *s_test = "Animated by Ryan Woodward";
     char *s_test2 = "The essence of COM is a language-neutral way of implementing objects that can be used in environments";
-    char *s_test4 = "An advantage of COM+ was that it could be run in.";
+    char *s_test4 = "An advantage of COM+";
     printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
     /*Выделение памяти для строки с названием колонок*/
-    if( (string = (char*) calloc( MSRTLEN, sizeof(char)) ) == NULL )
-    {
+    if( (string = (char*) calloc( MSRTLEN, sizeof(char)) ) == NULL ) {
         fprintf( stderr, "\nError string\n" );
         return 1;
     }
@@ -39,25 +38,25 @@ int main( )
         fprintf( stderr, "Cannot open input file.\n" );
         return 1;
     }
-    
-    
 
-    printf("Считываем строку содержащую названия колонок.\n");
+    printf("Cap string\n");
     /*(name&number&&class&state)*/
     fgets( string, MSRTLEN, in);
     printf( "%s\n", string );
     
     fclose(in);
-    printf("Вызов функции \"tioTableBegin\".\n");
+    printf("Call \"tioTableBegin\".\n");
     td = tioTableBegin( string, TIOCHAR, TIOSTRING, TIODOUBLE, TIOSTRING);
 
     /*Вызов функции заполнения таблицы*/
-    printf("\nВызов функции \"tioTableRecord\".\n");
+    printf("\nCall \"tioTableRecord\".\n");
     td = tioTableRecord( td,num, 'r', s_test4, doub_test, s_test );
     c_test = 'g' ; doub_test = 43.9 ;long_test = 43 ;
     td = tioTableRecord( td,num, 'e', s_test4, doub_test, s_test2 );
     /*Вызов завершающей функции*/
-    printf("\nВызов функции \"tioTableEnd\".\n");
+    printf("\nCall \"tioTableEnd\".\n");
+
+
     tioTableEnd( td );
 
     /*Освобождаем память для строки*/

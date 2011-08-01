@@ -32,7 +32,7 @@ void* tioTableBegin( const char* format,  ... )
             ++ datTab->countColum;
     }
 
-    printf("Колличество символов %d.\nКолличество столбцов %d.\n", datTab->countLetter,
+    printf("Count of letter %d.\nCount of colum %d.\n", datTab->countLetter,
             datTab->countColum );
 
     /*Allocating memory for cap*/
@@ -81,7 +81,7 @@ void* tioTableBegin( const char* format,  ... )
     } 
 
     /*Writing data types to the buffer*/
-    printf ("Типы данных: ");
+    printf ("Data types: ");
     for ( i = 0; i < datTab->countColum; ++ i )
     {
         datTab->bufType[i] = va_arg(ap, int);
