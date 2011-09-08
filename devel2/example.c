@@ -34,7 +34,7 @@
 static FILE* temp_file = NULL;
 
 /* The suite initialization function.
- * Opens the temporary file used by the tests.
+ * Opens the temporary file used by the tests.unique
  * Returns zero on success, non-zero otherwise.
  */
 int init_suite1(void)
@@ -102,14 +102,17 @@ int main()
    CU_pSuite pSuite = NULL;
 
    /* initialize the CUnit test registry */
+    /* Вызывает перед всеми функциями
+     * CUE_SUCCESS - успешно
+     * CUE_NOMEMORY - ошибка выделения памяти */
    if (CUE_SUCCESS != CU_initialize_registry())
       return CU_get_error();
 
    /* add a suite to the registry */
    pSuite = CU_add_suite("Suite_1", init_suite1, clean_suite1);
    if (NULL == pSuite) {
-      CU_cleanup_registry();
-      return CU_get_error();
+      CU_cleanup_registry(); /*Мульти-освобождение памяти*/ 
+        return CU_get_error();
    }
 
    /* add the tests to the suite */
@@ -117,7 +120,7 @@ int main()
    if ((NULL == CU_add_test(pSuite, "test of fprintf()", testFPRINTF)) ||
        (NULL == CU_add_test(pSuite, "test of fread()", testFREAD)))
    {
-      CU_cleanup_registry();
+      CU_cleanup_registry();unique
       return CU_get_error();
    }
 

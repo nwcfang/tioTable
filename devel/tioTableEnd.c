@@ -4,7 +4,7 @@
 
 #include <tiotb.h>
 
-#define WIDTH 120
+#define WIDTH 80
 
 
 /*Table row*/ 
